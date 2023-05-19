@@ -1,92 +1,103 @@
-import { logger } from '../index'
 import { Board as BoardInterface } from '../types/board'
-import { Board } from '../models/board';
-import { v4 as uuidv4 } from 'uuid';
-import { addIdToNewColumns } from '../utils/board';
-import { MercuriusContext } from 'mercurius';
-import { authentication } from '../utils/authentication';
-import { CTX } from '../types/context';
+import { Board } from '../models/board'
+import { v4 as uuidv4 } from 'uuid'
+import { addIdToNewColumns } from '../utils/board'
+import { MercuriusContext } from 'mercurius'
+import { authentication } from '../utils/authentication'
+import { CTX } from '../types/context'
+import { logger } from '../server'
 
-export const getBoards = async (_: MercuriusContext, y: {}, ctx: CTX) => {
-    try {
-        authentication(ctx)
+export const getBoards = async (_: MercuriusContext, y: any, ctx: CTX) => {
+  try {
+    authentication(ctx)
 
-        const boards = await Board.find({})
+    const boards = await Board.find({})
 
-        return boards
-    } catch (error) {
-        logger.error(error)
-        throw error;
-    }
+    return boards
+  } catch (error) {
+    logger.error(error)
+    throw error
+  }
 }
 
-export const getDashboard = async (_: MercuriusContext, { _id }: { _id: String }, ctx: CTX) => {
-    try {
-        authentication(ctx)
+export const getDashboard = async (
+  _: MercuriusContext,
+  { _id }: { _id: string },
+  ctx: CTX
+) => {
+  try {
+    authentication(ctx)
 
-        const board = await Board.find({ _id })
+    const board = await Board.find({ _id })
 
-        return board[0]
-    } catch (error) {
-        logger.error(error)
-        throw error;
-    }
+    return board[0]
+  } catch (error) {
+    logger.error(error)
+    throw error
+  }
 }
 
 export const createDashboard = async (
-    _: MercuriusContext, { dashboard }: { dashboard: BoardInterface }, ctx: CTX
+  _: MercuriusContext,
+  { dashboard }: { dashboard: BoardInterface },
+  ctx: CTX
 ) => {
-    try {
-        authentication(ctx)
+  try {
+    authentication(ctx)
 
-        dashboard.columns = dashboard.columns.map((column) => ({
-            ...column,
-            _id: uuidv4()
-        }))
-        const board = await Board.create(dashboard)
+    dashboard.columns = dashboard.columns.map((column) => ({
+      ...column,
+      _id: uuidv4(),
+    }))
+    const board = await Board.create(dashboard)
 
-        return board
-    } catch (error) {
-        logger.error(error)
-        throw error;
-    }
+    return board
+  } catch (error) {
+    logger.error(error)
+    throw error
+  }
 }
 
-export const deleteDashboard = async (_: MercuriusContext, { _id }: { _id: String }, ctx: CTX) => {
-    try {
-        authentication(ctx)
+export const deleteDashboard = async (
+  _: MercuriusContext,
+  { _id }: { _id: string },
+  ctx: CTX
+) => {
+  try {
+    authentication(ctx)
 
-        const board = await Board.findByIdAndDelete({ _id })
+    const board = await Board.findByIdAndDelete({ _id })
 
-        return board
-    } catch (error) {
-        logger.error(error)
-        throw error;
-    }
+    return board
+  } catch (error) {
+    logger.error(error)
+    throw error
+  }
 }
 
 export const editBoard = async (
-    _: MercuriusContext,
-    {
-        _id,
-        board,
-    }: {
-        _id: string
-        board: BoardInterface
-    }, ctx: CTX
+  _: MercuriusContext,
+  {
+    _id,
+    board,
+  }: {
+    _id: string
+    board: BoardInterface
+  },
+  ctx: CTX
 ) => {
-    try {
-        authentication(ctx)
+  try {
+    authentication(ctx)
 
-        let boardToUpdate = addIdToNewColumns(board)
+    const boardToUpdate = addIdToNewColumns(board)
 
-        const actualDashboard = await Board.updateOne({ _id }, boardToUpdate, {
-            new: true,
-        })
+    const actualDashboard = await Board.updateOne({ _id }, boardToUpdate, {
+      new: true,
+    })
 
-        return actualDashboard[0]
-    } catch (error) {
-        logger.error(error)
-        throw error;
-    }
+    return actualDashboard[0]
+  } catch (error) {
+    logger.error(error)
+    throw error
+  }
 }

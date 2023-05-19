@@ -1,12 +1,4 @@
 import {
-    confirmSignUpCode,
-    refreshToken,
-    registerNewUser,
-    resendConfirmationCode,
-    signIn
-} from '../controller/authentication.controller';
-
-import {
     createTask,
     deleteTask,
     updateTask
@@ -19,8 +11,9 @@ import {
     getDashboard,
     deleteDashboard,
 } from '../controller/dashboard.controller'
+import { IResolvers, MercuriusContext } from 'mercurius'
 
-export const dashboardResolver = {
+export const dashboardResolver: IResolvers<MercuriusContext, any>  = {
     Query: {
         //Boards
         getBoards,
@@ -35,11 +28,5 @@ export const dashboardResolver = {
         createTask,
         deleteTask,
         updateTask,
-        //Authentication
-        registerNewUser,
-        confirmSignUpCode,
-        resendConfirmationCode,
-        signIn,
-        refreshToken
     },
 }

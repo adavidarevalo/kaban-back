@@ -11,11 +11,6 @@ export const dashboardSchema = `
     createTask(task: TaskInput!): Task
     deleteTask(taskToDelete: TaskToDelete!): ID!
     updateTask(task: TaskInput!): Task
-    registerNewUser(user: UserInput!): Ok!
-    confirmSignUpCode(user: UserConfirmSingUp!): Ok!
-    resendConfirmationCode(email: String!): Ok!
-    signIn(user: UserSignIn!): Token!
-    refreshToken(refreshToken: String!): String!
   }
 
   input UserSignIn {
@@ -73,7 +68,8 @@ export const dashboardSchema = `
     refreshToken: String!
   }
   type Ok {
-    status: String!
+    status: String
+    errorMessage: String
   }
 
   type Dashboard {
